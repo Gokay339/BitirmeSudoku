@@ -1,0 +1,29 @@
+def gecerli_mi(tablo, satir, sutun, sayi):
+    if sayi in tablo[satir]:
+        return False
+    if sayi in tablo[:, sutun]:
+        return False
+    satir_baslangic = (satir // 3) * 3
+    sutun_baslangic = (sutun // 3) * 3
+    if sayi in tablo[satir_baslangic:satir_baslangic+3, sutun_baslangic:sutun_baslangic+3]:
+        return False
+    return True
+
+def sudoku_coz(tablo):
+    for satir in range(9):
+        for sutun in range(9):
+            if tablo[satir, sutun] == 0:
+                for sayi in range(1, 10):
+                    if gecerli_mi(tablo, satir, sutun, sayi):
+                        tablo[satir, sutun] = sayi
+                        if sudoku_coz(tablo):
+                            return True
+                        tablo[satir, sutun] = 0
+                return False
+    return True
+
+if sudoku_coz(sudoku_tablo):
+    print("Sudoku çözüldü:")
+    print(sudoku_tablo)
+else:
+    print("Çözülemiyor")
