@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def sudoku_olustur():
+    temel = 3
+    yan = temel * temel
+
+    def desen(r, c): return (temel * (r % temel) + r // temel + c) % yan
+    def karistir(s): return np.random.permutation(s)
+
+    rTemel = range(temel)
+    satirlar = [g * temel + r for g in karistir(rTemel) for r in karistir(rTemel)]
+    sutunlar = [g * temel + c for g in karistir(rTemel) for c in karistir(rTemel)]
+    sayilar = karistir(range(1, temel * temel + 1))
+
+    tablo = np.array([[sayilar[desen(r, c)] for c in sutunlar] for r in satirlar])
+
+    kareler = yan * yan
+    bos_hucre_sayisi = kareler * 3 // 4
+    for p in np.random.choice(range(kareler), bos_hucre_sayisi, replace=False):
+        tablo[p // yan][p % yan] = 0
+
+    return tablo
+
+def sudoku_ciz(tablo):
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.matshow(tablo == 0, cmap='coolwarm')
+
+    for i in range(9):
+        for j in range(9):
+            if tablo[i, j] != 0:
+                ax.text(j, i, str(tablo[i, j]), va='center', ha='center')
+    
+    plt.xticks([])
+    plt.yticks([])
+    plt.savefig('sudoku.png')
+    plt.show()
+
+sudoku_tablo = sudoku_olustur()
+sudoku_ciz(sudoku_tablo)
+
